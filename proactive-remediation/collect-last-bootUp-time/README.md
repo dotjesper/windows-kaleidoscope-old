@@ -1,6 +1,6 @@
 ---
 Title: README
-Date: date: April 15, 2021
+Date:April 15, 2021
 Author: dotjesper
 Status: In development
 ---
