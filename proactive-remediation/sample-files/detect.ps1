@@ -10,21 +10,21 @@
 .EXAMPLE
     .\detect.ps1
 .NOTES
-    version: 1.5
+    version: 1.6
     author: @dotjesper
-    date: May 30, 2022
+    date: May 31, 2022
 #>
 #requires -version 5.1
 [CmdletBinding()]
 param (
     #variables
     [int]$doTest,
-    [bool]$doFail = $false,
-    [string]$fLogContentFile = "$($Env:ProgramData)\Microsoft\IntuneManagementExtension\Logs\hello-world-M$($doTest).log"
+    [bool]$doFail = $false
 )
 begin {
     #variables :: environment
-    #
+    [string]$fLogContentFile = "$($Env:ProgramData)\Microsoft\IntuneManagementExtension\Logs\hello-world-M$($doTest).log"
+
     #variables :: conditions
     [bool]$runScriptIn64bitPowerShell = $false
     #region :: functions
@@ -51,7 +51,7 @@ begin {
     #endregion
 }
 process {
-    Write-Verbose -Message "transmogryflog: $($transmogryflog)"
+    Write-Verbose -Message "Content log file: $($fLogContentFile)"
     #region :: check conditions
     if ($runScriptIn64bitPowerShell -eq $true -and $([System.Environment]::Is64BitProcess) -eq $false) {
         Write-Output -InputObject "Script must be run using 64-bit PowerShell."
@@ -117,7 +117,7 @@ process {
                     fLogContent -fLogContent "Script name: $($MyInvocation.MyCommand.Name)" -fLogContentComponent ""
                     fLogContent -fLogContent "Script folder: $(Split-Path -Parent -Path $MyInvocation.MyCommand.Path)" -fLogContentComponent ""
                     fLogContent -fLogContent "Command line: $($MyInvocation.Line)" -fLogContentComponent ""
-                    fLogContent -fLogContent "Run script in 64 bit PowerShell: $runScriptIn64bitPowerShel" -fLogContentComponent ""
+                    fLogContent -fLogContent "Run script in 64 bit PowerShell: $runScriptIn64bitPowerShell" -fLogContentComponent ""
                     fLogContent -fLogContent "Running 64 bit PowerShell: $([System.Environment]::Is64BitProcess)" -fLogContentComponent ""
                     if ($($ExecutionContext.SessionState.LanguageMode) -eq "FullLanguage") {
                         fLogContent -fLogContent "Running elevated: $(([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))" -fLogContentComponent ""
@@ -132,6 +132,8 @@ process {
                     fLogContent -fLogContent "Detected OS build: $($([environment]::OSVersion.Version).Build)" -fLogContentComponent ""
                     fLogContent -fLogContent "($doTest) Hello world: Write-Output line 1." -fLogContentComponent "$($logfileItem.fLogContentComponent)"
                     fLogContent -fLogContent "($doTest) Hello world: Write-Output line 2." -fLogContentComponent "$($logfileItem.fLogContentComponent)"
+                    fLogContent -fLogContent "($doTest) Hello world: Write-Output line 3." -fLogContentComponent "$($logfileItem.fLogContentComponent)"
+                    fLogContent -fLogContent "($doTest) Hello world: Write-Output line 24." -fLogContentComponent "$($logfileItem.fLogContentComponent)"
                 }
                 catch {
                     $errMsg = $_.Exception.Message
